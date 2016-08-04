@@ -11,7 +11,7 @@ inlet = StreamInlet(streams[0])
 
 canal1 = list()
 timestamp_list = list()
-len_sample = 2000
+len_sample = 1999
 
 plt.ion()
 
@@ -27,12 +27,19 @@ while True:
     timestamp_list.append(timestamp)
 
     if len(canal1) > len_sample:
-        [tapers, eigen] = dpss(2001, 2.5, 4)
-        res = pmtm(canal1, e=tapers, v=eigen, show=False)
+        [tapers, eigen] = dpss(2000, 2.5, 4)
+        res = pmtm(canal1, e=tapers, v=eigen, show=True)
         res = pmtm(canal1, NW=2.5, show=False)
-        res = pmtm(canal1, NW=2.5, k=4, show=True)
+        res = pmtm(canal1, NW=2.5, k=4, show=False)
 
-        plt.plot(res)
+        frq = arange(len_sample) * 500 / len_sample
+
+        for i in range(0, 49):
+            res = np.delete(res, len(res)-1)
+
+        plt.plot(frq, res, 'r')
+        plt.xlim(0, max(frq) / 2)
         plt.draw()
         plt.pause(0.01)
         plt.clf()
+

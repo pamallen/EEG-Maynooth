@@ -1,6 +1,7 @@
 from pylsl import StreamInlet, resolve_stream
 import numpy as np
 from scipy.interpolate import interp1d
+from scipy import arange
 import matplotlib.pyplot as plt
 
 # first resolve an EEG stream on the lab network
@@ -30,9 +31,12 @@ while True:
     if len(canal1) > len_sample:
         f = interp1d(timestamp_list, canal1)
         FFT = np.fft.fft(f(timestamp_list))
-        plt.plot(FFT)
-        plt.xlim(0, len_sample/2)
-        plt.ylim(-0.3e7,0.3e7)
+
+        frq = arange(len_sample)*500/len_sample
+        FFT=np.delete(FFT,0)
+
+        plt.plot(frq,abs(FFT))
+        plt.xlim(0, max(frq)/2)
         plt.draw()
         plt.pause(0.01)
         plt.clf()
